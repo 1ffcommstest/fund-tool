@@ -1,0 +1,891 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Luxembourg Fund Vehicle Decision Tree</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap');
+
+  :root {
+    --lux-blue: #2B6CB0;
+    --lux-blue-light: #4299E1;
+    --lux-blue-pale: #EBF4FF;
+    --lux-navy: #1A365D;
+    --lux-teal: #2C7A7B;
+    --lux-gold: #B7791F;
+    --lux-gold-light: #FAF089;
+    --lux-green: #276749;
+    --lux-green-light: #C6F6D5;
+    --lux-gray: #4A5568;
+    --lux-gray-light: #F7FAFC;
+    --lux-gray-border: #E2E8F0;
+    --white: #FFFFFF;
+    --text-dark: #1A202C;
+    --text-mid: #4A5568;
+    --shadow: 0 4px 24px rgba(26,54,93,0.10);
+    --shadow-hover: 0 8px 32px rgba(26,54,93,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: #F0F4FA;
+    color: var(--text-dark);
+    min-height: 100vh;
+  }
+
+  header {
+    background: var(--lux-navy);
+    padding: 32px 48px 28px;
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+    border-bottom: 4px solid var(--lux-blue-light);
+  }
+
+  .logo-mark {
+    width: 44px;
+    height: 44px;
+    position: relative;
+    flex-shrink: 0;
+  }
+  .logo-mark svg { width: 100%; height: 100%; }
+
+  .header-text h1 {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.55rem;
+    font-weight: 700;
+    color: var(--white);
+    letter-spacing: -0.01em;
+    line-height: 1.2;
+  }
+  .header-text p {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+    font-weight: 300;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .container {
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+  }
+
+  /* BREADCRUMB TRAIL */
+  .trail {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 32px;
+    min-height: 28px;
+  }
+  .trail-item {
+    font-size: 0.75rem;
+    font-weight: 500;
+    color: var(--lux-blue);
+    background: var(--lux-blue-pale);
+    border: 1px solid #BEE3F8;
+    border-radius: 20px;
+    padding: 3px 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .trail-item:hover { background: #BEE3F8; }
+  .trail-sep {
+    font-size: 0.7rem;
+    color: var(--lux-gray);
+  }
+  .trail-start {
+    font-size: 0.75rem;
+    color: var(--lux-gray);
+    font-weight: 400;
+  }
+
+  /* QUESTION CARD */
+  .question-card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    padding: 36px 40px;
+    margin-bottom: 24px;
+    border-top: 4px solid var(--lux-blue);
+    animation: slideIn 0.25s ease;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+
+  .question-step {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lux-blue);
+    margin-bottom: 10px;
+  }
+  .question-text {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--lux-navy);
+    line-height: 1.35;
+    margin-bottom: 8px;
+  }
+  .question-sub {
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    margin-bottom: 28px;
+    line-height: 1.5;
+  }
+
+  .options-grid {
+    display: grid;
+    gap: 12px;
+  }
+  .options-grid.cols-2 { grid-template-columns: 1fr 1fr; }
+  .options-grid.cols-1 { grid-template-columns: 1fr; }
+
+  .option-btn {
+    background: var(--lux-gray-light);
+    border: 2px solid var(--lux-gray-border);
+    border-radius: 12px;
+    padding: 18px 22px;
+    cursor: pointer;
+    text-align: left;
+    transition: all 0.18s;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+  }
+  .option-btn:hover {
+    border-color: var(--lux-blue-light);
+    background: var(--lux-blue-pale);
+    box-shadow: var(--shadow-hover);
+    transform: translateY(-2px);
+  }
+  .option-label {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--lux-navy);
+  }
+  .option-desc {
+    font-size: 0.78rem;
+    color: var(--text-mid);
+    font-weight: 400;
+    line-height: 1.4;
+  }
+
+  /* RESULT CARD */
+  .result-card {
+    background: var(--white);
+    border-radius: 16px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    animation: slideIn 0.3s ease;
+  }
+
+  .result-header {
+    padding: 28px 36px 22px;
+    background: var(--lux-navy);
+    position: relative;
+  }
+  .result-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: rgba(255,255,255,0.55);
+    margin-bottom: 6px;
+  }
+  .result-vehicle {
+    font-family: 'Libre Baskerville', serif;
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--white);
+    line-height: 1.1;
+  }
+  .result-fullname {
+    font-size: 0.85rem;
+    color: rgba(255,255,255,0.65);
+    margin-top: 6px;
+    font-weight: 300;
+    font-style: italic;
+  }
+  .result-badge {
+    position: absolute;
+    top: 24px;
+    right: 28px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 5px 14px;
+    border-radius: 20px;
+  }
+  .badge-regulated { background: #C6F6D5; color: #22543D; }
+  .badge-unregulated { background: #FEF3C7; color: #78350F; }
+  .badge-retail { background: #BEE3F8; color: #1A365D; }
+
+  .result-body {
+    padding: 28px 36px;
+  }
+
+  .result-summary {
+    font-size: 0.92rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+    margin-bottom: 28px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--lux-gray-border);
+  }
+
+  .specs-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+  .spec-item {
+    background: var(--lux-gray-light);
+    border-radius: 10px;
+    padding: 14px 16px;
+  }
+  .spec-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--lux-blue);
+    margin-bottom: 5px;
+  }
+  .spec-value {
+    font-size: 0.88rem;
+    font-weight: 600;
+    color: var(--lux-navy);
+    line-height: 1.3;
+  }
+  .spec-note {
+    font-size: 0.75rem;
+    color: var(--text-mid);
+    margin-top: 3px;
+  }
+
+  .also-consider {
+    background: #FFFBEB;
+    border: 1px solid #FDE68A;
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 24px;
+  }
+  .also-consider h4 {
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lux-gold);
+    margin-bottom: 8px;
+  }
+  .alt-vehicles {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .alt-chip {
+    font-size: 0.78rem;
+    font-weight: 600;
+    background: #FEF3C7;
+    color: #78350F;
+    border: 1px solid #FDE68A;
+    border-radius: 20px;
+    padding: 4px 12px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .alt-chip:hover { background: #FDE68A; }
+
+  .restart-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--lux-navy);
+    color: var(--white);
+    border: none;
+    border-radius: 10px;
+    padding: 12px 24px;
+    font-size: 0.88rem;
+    font-weight: 600;
+    font-family: 'DM Sans', sans-serif;
+    cursor: pointer;
+    transition: background 0.18s;
+  }
+  .restart-btn:hover { background: var(--lux-blue); }
+
+  @media (max-width: 600px) {
+    header { padding: 20px 20px 18px; }
+    .container { padding: 24px 16px 60px; }
+    .question-card { padding: 24px 20px; }
+    .options-grid.cols-2 { grid-template-columns: 1fr; }
+    .specs-grid { grid-template-columns: 1fr; }
+    .result-header { padding: 20px 22px 18px; }
+    .result-body { padding: 20px 22px; }
+    .result-vehicle { font-size: 1.4rem; }
+    .result-badge { position: static; margin-top: 10px; display: inline-block; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo-mark">
+    <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="22,4 40,34 4,34" fill="none" stroke="#4299E1" stroke-width="2.5"/>
+      <polygon points="22,12 35,34 9,34" fill="none" stroke="#4299E1" stroke-width="1.5" opacity="0.5"/>
+      <polygon points="22,20 29,34 15,34" fill="none" stroke="#4299E1" stroke-width="1" opacity="0.3"/>
+    </svg>
+  </div>
+  <div class="header-text">
+    <h1>Luxembourg Fund Vehicle Selector</h1>
+    <p>Luxembourg for Finance · Investment Vehicle Decision Tool</p>
+  </div>
+</header>
+
+<div class="container">
+  <div class="trail" id="trail"></div>
+  <div id="main"></div>
+</div>
+
+<script>
+// ─── DATA ────────────────────────────────────────────────────────────────────
+
+const VEHICLES = {
+  UCITS: {
+    name: "UCITS",
+    fullname: "Undertaking for Collective Investment in Transferable Securities",
+    status: "regulated",
+    badge: "badge-retail",
+    badgeText: "Retail / Professional",
+    summary: "The gold standard for retail investment funds in Europe and globally. Luxembourg transposed the UCITS directive in 1988 — the first country to do so — and today holds 34% of global UCITS assets. UCITS carry an EU passport allowing distribution across all Member States via a simple notification, and are recognised in over 80 countries worldwide.",
+    specs: [
+      { label: "Investor Type", value: "All investors (retail + professional)", note: "No minimum investment threshold" },
+      { label: "Regulator", value: "CSSF prior authorisation", note: "Ongoing supervision" },
+      { label: "Time to Market", value: "3–6 months", note: "CSSF approval required" },
+      { label: "Assets", value: "Transferable securities only", note: "UCITS-eligible instruments" },
+      { label: "Passporting", value: "Full EU Passport", note: "Simple notification procedure" },
+      { label: "Subscription Tax", value: "0.05% p.a. (0.01% for money market)", note: "On NAV" },
+      { label: "Leverage", value: "Strictly restricted", note: "Commitment/VaR approach" },
+      { label: "Typical Use", value: "Liquid funds, ETFs, cross-border retail", note: "" }
+    ],
+    alternatives: ["Part II UCI", "SIF"]
+  },
+  PARTII: {
+    name: "Part II UCI",
+    fullname: "Undertaking for Collective Investment (Part II of the 2010 Law)",
+    status: "regulated",
+    badge: "badge-retail",
+    badgeText: "All Investors",
+    summary: "The flexible regulated vehicle for funds that fall outside the UCITS eligible assets universe but wish to target retail investors. Less restrictive than UCITS on eligible assets and leverage, but subject to CSSF authorisation. Commonly used for fund of funds, hedge funds targeting retail, and mixed-asset strategies.",
+    specs: [
+      { label: "Investor Type", value: "All investors including retail", note: "No minimum threshold" },
+      { label: "Regulator", value: "CSSF prior authorisation", note: "Ongoing supervision" },
+      { label: "Time to Market", value: "3–6 months", note: "CSSF approval required" },
+      { label: "Assets", value: "Unrestricted", note: "No asset restrictions" },
+      { label: "Passporting", value: "National rules apply", note: "No automatic EU passport" },
+      { label: "Subscription Tax", value: "0.05% p.a.", note: "On NAV" },
+      { label: "Leverage", value: "Flexible", note: "No hard UCITS constraints" },
+      { label: "Typical Use", value: "Retail hedge funds, fund of funds", note: "" }
+    ],
+    alternatives: ["UCITS", "SIF"]
+  },
+  SIF: {
+    name: "SIF",
+    fullname: "Specialised Investment Fund",
+    status: "regulated",
+    badge: "badge-regulated",
+    badgeText: "Regulated AIF",
+    summary: "The regulated workhorse for Luxembourg alternative investment funds targeting professional and well-informed investors. Subject to CSSF supervision and prior authorisation but offers considerable flexibility on eligible assets and investment strategies. Over 1,300 SIFs are established in Luxembourg.",
+    specs: [
+      { label: "Investor Type", value: "Professional & well-informed investors", note: "Min. €100,000 investment" },
+      { label: "Regulator", value: "CSSF prior authorisation", note: "3–6 months to launch" },
+      { label: "Time to Market", value: "3–6 months", note: "Full CSSF approval process" },
+      { label: "Assets", value: "Unrestricted", note: "Risk diversification required" },
+      { label: "Passporting", value: "EU Passport via AIFM", note: "If managed by authorised AIFM" },
+      { label: "Subscription Tax", value: "0.01% p.a.", note: "On NAV" },
+      { label: "Leverage", value: "Flexible", note: "Risk diversification required" },
+      { label: "Typical Use", value: "Hedge funds, RE, PE, multi-asset alts", note: "" }
+    ],
+    alternatives: ["RAIF", "SICAR", "Part II UCI"]
+  },
+  SICAR: {
+    name: "SICAR",
+    fullname: "Société d'Investissement en Capital à Risque",
+    status: "regulated",
+    badge: "badge-regulated",
+    badgeText: "Regulated AIF",
+    summary: "Purpose-built for private equity and venture capital. The SICAR regime is designed around risk capital and does not impose diversification requirements, making it ideal for concentrated positions in unlisted companies. Over 350 SICARs represent more than €62bn AUM in Luxembourg.",
+    specs: [
+      { label: "Investor Type", value: "Professional & well-informed investors", note: "Min. €100,000 investment" },
+      { label: "Regulator", value: "CSSF prior authorisation", note: "Ongoing supervision" },
+      { label: "Time to Market", value: "3–6 months", note: "CSSF approval required" },
+      { label: "Assets", value: "Risk capital / private equity only", note: "No diversification requirement" },
+      { label: "Passporting", value: "EU Passport via AIFM", note: "If managed by authorised AIFM" },
+      { label: "Subscription Tax", value: "Exempt", note: "No subscription tax" },
+      { label: "Leverage", value: "No restrictions", note: "Investment in risk capital" },
+      { label: "Typical Use", value: "Private equity, VC, concentrated PE", note: "" }
+    ],
+    alternatives: ["RAIF (SICAR-like)", "SLP", "SIF"]
+  },
+  RAIF: {
+    name: "RAIF",
+    fullname: "Reserved Alternative Investment Fund",
+    status: "unregulated",
+    badge: "badge-unregulated",
+    badgeText: "Unregulated (AIFM supervised)",
+    summary: "The fastest route to market for alternative funds in Luxembourg. The RAIF requires no CSSF authorisation at fund level — it is supervised indirectly via its mandatory AIFM. Launched in 2016, it has become the preferred vehicle for private equity, real estate, and hedge fund strategies requiring speed and flexibility. 1,533 RAIFs are now established in Luxembourg.",
+    specs: [
+      { label: "Investor Type", value: "Professional & well-informed investors", note: "Min. €100,000 investment" },
+      { label: "Regulator", value: "No direct CSSF oversight", note: "AIFM supervised; notary setup" },
+      { label: "Time to Market", value: "2–4 weeks", note: "No CSSF approval needed" },
+      { label: "Assets", value: "Unrestricted (SIF or SICAR regime)", note: "Elect at formation" },
+      { label: "Passporting", value: "EU Passport via AIFM", note: "Requires authorised AIFM" },
+      { label: "Subscription Tax", value: "0.01% p.a. (SIF-like) / Exempt (SICAR-like)", note: "Regime elected at setup" },
+      { label: "Leverage", value: "Flexible", note: "Dependent on elected regime" },
+      { label: "Typical Use", value: "PE, real estate, hedge, infrastructure", note: "" }
+    ],
+    alternatives: ["SIF", "SLP", "SICAR"]
+  },
+  SLP: {
+    name: "SLP / SCSp",
+    fullname: "Special Limited Partnership (Société en Commandite Spéciale)",
+    status: "unregulated",
+    badge: "badge-unregulated",
+    badgeText: "Unregulated",
+    summary: "Luxembourg's answer to Anglo-Saxon limited partnership structures. The SLP has no legal personality, offers maximum contractual freedom, and imposes no investment or diversification constraints. Widely used in private equity as a co-investment vehicle or as a fund structure itself. Over 5,600 SCSs/SCSps are in existence in Luxembourg.",
+    specs: [
+      { label: "Investor Type", value: "Professional investors", note: "Sophisticated / institutional" },
+      { label: "Regulator", value: "No CSSF supervision", note: "Pure contractual vehicle" },
+      { label: "Time to Market", value: "Days to weeks", note: "Notarised partnership agreement" },
+      { label: "Assets", value: "Unrestricted", note: "Complete investment freedom" },
+      { label: "Passporting", value: "EU Passport via AIFM (if appointed)", note: "AIFM not mandatory" },
+      { label: "Subscription Tax", value: "Exempt", note: "Tax transparent" },
+      { label: "Leverage", value: "No restrictions", note: "Contractually defined" },
+      { label: "Typical Use", value: "PE co-invest, carried interest, deal-by-deal", note: "" }
+    ],
+    alternatives: ["RAIF", "SICAR"]
+  },
+  SOPARFI: {
+    name: "SOPARFI",
+    fullname: "Société de Participations Financières",
+    status: "unregulated",
+    badge: "badge-unregulated",
+    badgeText: "Holding / Unregulated",
+    summary: "A fully-taxable Luxembourg holding company used as a financial holding vehicle. Not a fund per se, but widely used in fund structures as a top-holding company, intermediate SPV, or for wealth management structuring. Benefits from Luxembourg's extensive tax treaty network (80+ treaties) and EU parent-subsidiary directive.",
+    specs: [
+      { label: "Investor Type", value: "Natural & legal persons", note: "No restriction" },
+      { label: "Regulator", value: "No CSSF supervision", note: "Standard company law" },
+      { label: "Time to Market", value: "1–2 weeks", note: "Notarised incorporation" },
+      { label: "Assets", value: "Holding of investment assets", note: "Participations in companies" },
+      { label: "Passporting", value: "EU Freedom to Provide Services", note: "Not a fund passport" },
+      { label: "Subscription Tax", value: "Not applicable", note: "Subject to CIT / MBT" },
+      { label: "Leverage", value: "No restrictions", note: "Thin cap rules apply" },
+      { label: "Typical Use", value: "Holding companies, SPVs, wealth structuring", note: "" }
+    ],
+    alternatives: ["SLP", "SPF"]
+  },
+  SPF: {
+    name: "SPF",
+    fullname: "Société de Gestion de Patrimoine Familial",
+    status: "unregulated",
+    badge: "badge-unregulated",
+    badgeText: "Wealth Management",
+    summary: "A dedicated vehicle for private wealth management by high-net-worth individuals and family offices. The SPF is restricted to passive wealth management — it cannot conduct commercial activities or manage third-party assets. It benefits from a favourable tax regime with exemption from income and wealth taxes.",
+    specs: [
+      { label: "Investor Type", value: "HNWI / Family offices only", note: "Private individuals & intermediaries" },
+      { label: "Regulator", value: "No CSSF supervision", note: "Tax authority oversight" },
+      { label: "Time to Market", value: "1–2 weeks", note: "Standard incorporation" },
+      { label: "Assets", value: "Portfolio of investment assets", note: "Passive holding only" },
+      { label: "Passporting", value: "Not applicable", note: "Wealth vehicle, not a fund" },
+      { label: "Subscription Tax", value: "0.25% p.a. on paid-in capital", note: "Subject to annual subscription tax" },
+      { label: "Leverage", value: "Restricted", note: "Passive management only" },
+      { label: "Typical Use", value: "Family wealth, private portfolio, succession", note: "" }
+    ],
+    alternatives: ["SOPARFI", "Life insurance contract"]
+  }
+};
+
+// ─── DECISION TREE ───────────────────────────────────────────────────────────
+
+const TREE = {
+  id: "start",
+  step: "Step 1",
+  question: "Who are the target investors?",
+  sub: "The investor type is the primary driver of which Luxembourg vehicles are available and which regulatory framework applies.",
+  layout: "cols-2",
+  options: [
+    {
+      label: "Retail investors",
+      desc: "General public, no minimum investment, broad distribution",
+      next: "retail_strategy"
+    },
+    {
+      label: "Professional investors",
+      desc: "Institutional, banks, fund managers, large corporates",
+      next: "pro_strategy"
+    },
+    {
+      label: "Well-informed investors",
+      desc: "Sophisticated individuals investing min. €100,000",
+      next: "pro_strategy"
+    },
+    {
+      label: "Private wealth / family",
+      desc: "HNWIs, family offices, private estates",
+      next: "wealth"
+    }
+  ]
+};
+
+const NODES = {
+  retail_strategy: {
+    id: "retail_strategy",
+    step: "Step 2",
+    question: "What assets will the fund invest in?",
+    sub: "For retail-accessible funds, eligible assets determine the regulatory framework.",
+    layout: "cols-2",
+    options: [
+      {
+        label: "Transferable securities",
+        desc: "Listed equities, bonds, money market instruments, ETFs",
+        next: "result_UCITS"
+      },
+      {
+        label: "Broader / alternative assets",
+        desc: "Real estate, derivatives, fund of funds, mixed strategies",
+        next: "result_PARTII"
+      }
+    ]
+  },
+  pro_strategy: {
+    id: "pro_strategy",
+    step: "Step 2",
+    question: "What is the primary investment strategy?",
+    sub: "Each strategy type has an optimal vehicle optimised for its regulatory, tax, and operational needs.",
+    layout: "cols-2",
+    options: [
+      {
+        label: "Private equity / Venture capital",
+        desc: "Concentrated risk capital, unlisted companies",
+        next: "pe_regulated"
+      },
+      {
+        label: "Real estate",
+        desc: "Direct property, REITs, infrastructure",
+        next: "re_speed"
+      },
+      {
+        label: "Hedge / multi-strategy",
+        desc: "Liquid alternatives, long/short, derivatives",
+        next: "hedge_regulated"
+      },
+      {
+        label: "Multi-asset / diversified alts",
+        desc: "Mixed alternative asset classes",
+        next: "multi_regulated"
+      }
+    ]
+  },
+  pe_regulated: {
+    id: "pe_regulated",
+    step: "Step 3",
+    question: "How important is speed to market?",
+    sub: "Private equity structures in Luxembourg offer a choice between regulatory comfort (SICAR/SIF) and fast launch (RAIF/SLP).",
+    layout: "cols-2",
+    options: [
+      {
+        label: "Regulatory approval preferred",
+        desc: "CSSF authorisation, 3–6 months, higher investor confidence",
+        next: "pe_vehicle_type"
+      },
+      {
+        label: "Fast launch essential",
+        desc: "2–4 weeks to market, no CSSF fund-level approval",
+        next: "pe_fast"
+      }
+    ]
+  },
+  pe_vehicle_type: {
+    id: "pe_vehicle_type",
+    step: "Step 4",
+    question: "What is the portfolio concentration approach?",
+    sub: "The key distinction between SICAR and SIF for private equity lies in diversification requirements.",
+    layout: "cols-2",
+    options: [
+      {
+        label: "Concentrated / single asset",
+        desc: "No diversification requirement, pure risk capital focus",
+        next: "result_SICAR"
+      },
+      {
+        label: "Diversified portfolio",
+        desc: "Multiple positions, risk diversification maintained",
+        next: "result_SIF"
+      }
+    ]
+  },
+  pe_fast: {
+    id: "pe_fast",
+    step: "Step 4",
+    question: "Is EU passporting (AIFMD) required?",
+    sub: "Both RAIF and SLP are fast to launch, but the SLP offers maximum contractual freedom without requiring an AIFM.",
+    layout: "cols-2",
+    options: [
+      {
+        label: "EU passport needed",
+        desc: "AIFMD marketing passport, cross-border distribution",
+        next: "result_RAIF"
+      },
+      {
+        label: "No passport needed",
+        desc: "Single jurisdiction, co-investment, club deal",
+        next: "result_SLP"
+      }
+    ]
+  },
+  re_speed: {
+    id: "re_speed",
+    step: "Step 3",
+    question: "Is fast launch or regulatory comfort the priority?",
+    sub: "Real estate funds commonly use either the SIF (regulated, CSSF-approved) or the RAIF (fast, AIFM-supervised).",
+    layout: "cols-2",
+    options: [
+      {
+        label: "Regulated structure preferred",
+        desc: "CSSF authorisation, 3–6 months, institutional credibility",
+        next: "result_SIF"
+      },
+      {
+        label: "Speed to market critical",
+        desc: "RAIF: 2–4 weeks, no CSSF fund-level approval",
+        next: "result_RAIF"
+      }
+    ]
+  },
+  hedge_regulated: {
+    id: "hedge_regulated",
+    step: "Step 3",
+    question: "Is CSSF fund-level authorisation required?",
+    sub: "Hedge strategies can be housed in a regulated SIF or the faster unregulated RAIF, both offering similar investment flexibility.",
+    layout: "cols-2",
+    options: [
+      {
+        label: "Yes — regulated fund preferred",
+        desc: "CSSF oversight, 3–6 months, 0.01% subscription tax",
+        next: "result_SIF"
+      },
+      {
+        label: "No — speed and flexibility",
+        desc: "RAIF: no fund-level CSSF, 2–4 weeks, AIFM required",
+        next: "result_RAIF"
+      }
+    ]
+  },
+  multi_regulated: {
+    id: "multi_regulated",
+    step: "Step 3",
+    question: "Is CSSF fund-level authorisation required?",
+    sub: "Multi-asset alternative funds typically fit either the SIF (regulated) or RAIF (unregulated but AIFM-supervised) framework.",
+    layout: "cols-2",
+    options: [
+      {
+        label: "Yes — regulated fund",
+        desc: "Full CSSF authorisation and ongoing supervision",
+        next: "result_SIF"
+      },
+      {
+        label: "No — flexible, fast",
+        desc: "RAIF with SIF-like investment rules, fast setup",
+        next: "result_RAIF"
+      }
+    ]
+  },
+  wealth: {
+    id: "wealth",
+    step: "Step 2",
+    question: "What is the primary wealth objective?",
+    sub: "Luxembourg offers dedicated vehicles for private wealth, ranging from pure family holding companies to fund structures.",
+    layout: "cols-2",
+    options: [
+      {
+        label: "Passive family wealth / succession",
+        desc: "Personal portfolio, no commercial activity, tax-efficient",
+        next: "result_SPF"
+      },
+      {
+        label: "Active holding / group structure",
+        desc: "Holding company, SPV, group structuring, M&A",
+        next: "result_SOPARFI"
+      }
+    ]
+  }
+};
+
+// Results
+Object.keys(VEHICLES).forEach(k => {
+  NODES["result_" + k] = { result: k };
+});
+
+// ─── STATE ───────────────────────────────────────────────────────────────────
+let history = []; // [{nodeId, choiceLabel}]
+let currentNode = "start";
+
+// ─── RENDER ──────────────────────────────────────────────────────────────────
+
+function getNode(id) {
+  if (id === "start") return TREE;
+  return NODES[id];
+}
+
+function render() {
+  renderTrail();
+  const node = getNode(currentNode);
+  if (node.result) {
+    renderResult(node.result);
+  } else {
+    renderQuestion(node);
+  }
+}
+
+function renderTrail() {
+  const trail = document.getElementById("trail");
+  if (history.length === 0) {
+    trail.innerHTML = '<span class="trail-start">Start your selection below</span>';
+    return;
+  }
+  let html = '<span class="trail-item" onclick="goToHistory(-1)">↺ Restart</span>';
+  history.forEach((h, i) => {
+    html += '<span class="trail-sep">›</span>';
+    html += `<span class="trail-item" onclick="goToHistory(${i})">${h.label}</span>`;
+  });
+  trail.innerHTML = html;
+}
+
+function renderQuestion(node) {
+  const main = document.getElementById("main");
+  const optionsHtml = node.options.map(opt => `
+    <button class="option-btn" onclick="choose('${opt.next}', '${escQ(opt.label)}')">
+      <span class="option-label">${opt.label}</span>
+      ${opt.desc ? `<span class="option-desc">${opt.desc}</span>` : ""}
+    </button>
+  `).join("");
+
+  main.innerHTML = `
+    <div class="question-card">
+      <div class="question-step">${node.step || ""}</div>
+      <div class="question-text">${node.question}</div>
+      ${node.sub ? `<div class="question-sub">${node.sub}</div>` : ""}
+      <div class="options-grid ${node.layout || "cols-2"}">${optionsHtml}</div>
+    </div>
+  `;
+}
+
+function renderResult(vehicleKey) {
+  const v = VEHICLES[vehicleKey];
+  const main = document.getElementById("main");
+
+  const specsHtml = v.specs.map(s => `
+    <div class="spec-item">
+      <div class="spec-label">${s.label}</div>
+      <div class="spec-value">${s.value}</div>
+      ${s.note ? `<div class="spec-note">${s.note}</div>` : ""}
+    </div>
+  `).join("");
+
+  const altsHtml = v.alternatives.map(a =>
+    `<span class="alt-chip" onclick="jumpToVehicle('${a}')">${a}</span>`
+  ).join("");
+
+  main.innerHTML = `
+    <div class="result-card">
+      <div class="result-header">
+        <div class="result-label">Recommended Vehicle</div>
+        <div class="result-vehicle">${v.name}</div>
+        <div class="result-fullname">${v.fullname}</div>
+        <span class="result-badge ${v.badge}">${v.badgeText}</span>
+      </div>
+      <div class="result-body">
+        <div class="result-summary">${v.summary}</div>
+        <div class="specs-grid">${specsHtml}</div>
+        ${v.alternatives.length ? `
+        <div class="also-consider">
+          <h4>Also consider</h4>
+          <div class="alt-vehicles">${altsHtml}</div>
+        </div>` : ""}
+        <button class="restart-btn" onclick="restart()">↺ &nbsp;Start over</button>
+      </div>
+    </div>
+  `;
+}
+
+// ─── ACTIONS ─────────────────────────────────────────────────────────────────
+
+function choose(nextId, label) {
+  history.push({ nodeId: currentNode, label: label });
+  currentNode = nextId;
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function goToHistory(idx) {
+  if (idx === -1) { restart(); return; }
+  const h = history[idx];
+  history = history.slice(0, idx);
+  currentNode = h.nodeId;
+  render();
+}
+
+function restart() {
+  history = [];
+  currentNode = "start";
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function jumpToVehicle(name) {
+  const map = {
+    "UCITS": "result_UCITS",
+    "Part II UCI": "result_PARTII",
+    "SIF": "result_SIF",
+    "SICAR": "result_SICAR",
+    "RAIF": "result_RAIF",
+    "RAIF (SICAR-like)": "result_RAIF",
+    "SLP": "result_SLP",
+    "SLP / SCSp": "result_SLP",
+    "SOPARFI": "result_SOPARFI",
+    "SPF": "result_SPF",
+    "Life insurance contract": "result_SPF"
+  };
+  const target = map[name];
+  if (target) {
+    history.push({ nodeId: currentNode, label: "→ " + name });
+    currentNode = target;
+    render();
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+}
+
+function escQ(s) {
+  return s.replace(/'/g, "\\'");
+}
+
+// ─── INIT ────────────────────────────────────────────────────────────────────
+render();
+</script>
+</body>
+</html>
