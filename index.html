@@ -31,44 +31,12 @@
 
   body {
     font-family: 'DM Sans', sans-serif;
-    background: #F0F4FA;
+    background: #6699CC26;
     color: var(--text-dark);
     min-height: 100vh;
   }
 
-  header {
-    background: var(--lux-navy);
-    padding: 32px 48px 28px;
-    display: flex;
-    align-items: flex-end;
-    gap: 24px;
-    border-bottom: 4px solid var(--lux-blue-light);
-  }
 
-  .logo-mark {
-    width: 44px;
-    height: 44px;
-    position: relative;
-    flex-shrink: 0;
-  }
-  .logo-mark svg { width: 100%; height: 100%; }
-
-  .header-text h1 {
-    font-family: 'Libre Baskerville', serif;
-    font-size: 1.55rem;
-    font-weight: 700;
-    color: var(--white);
-    letter-spacing: -0.01em;
-    line-height: 1.2;
-  }
-  .header-text p {
-    font-size: 0.85rem;
-    color: rgba(255,255,255,0.6);
-    margin-top: 4px;
-    font-weight: 300;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
 
   .container {
     max-width: 900px;
@@ -343,19 +311,6 @@
 </head>
 <body>
 
-<header>
-  <div class="logo-mark">
-    <svg viewBox="0 0 44 44" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <polygon points="22,4 40,34 4,34" fill="none" stroke="#4299E1" stroke-width="2.5"/>
-      <polygon points="22,12 35,34 9,34" fill="none" stroke="#4299E1" stroke-width="1.5" opacity="0.5"/>
-      <polygon points="22,20 29,34 15,34" fill="none" stroke="#4299E1" stroke-width="1" opacity="0.3"/>
-    </svg>
-  </div>
-  <div class="header-text">
-    <h1>Luxembourg Fund Vehicle Selector</h1>
-    <p>Luxembourg for Finance · Investment Vehicle Decision Tool</p>
-  </div>
-</header>
 
 <div class="container">
   <div class="trail" id="trail"></div>
