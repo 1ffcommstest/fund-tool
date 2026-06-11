@@ -218,7 +218,7 @@
   .specs-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    gap: 12px;
     margin-bottom: 24px;
   }
   .spec-item {
@@ -327,16 +327,21 @@ const VEHICLES = {
     status: "regulated",
     badge: "badge-retail",
     badgeText: "Retail / Professional",
-    summary: "The gold standard for retail investment funds in Europe and globally. Luxembourg transposed the UCITS directive in 1988 — the first country to do so — and today holds 34% of global UCITS assets. UCITS carry an EU passport allowing distribution across all Member States via a simple notification, and are recognised in over 80 countries worldwide.",
+    summary: "The gold standard for retail investment funds in Europe and globally. Governed by the Law of 17 December 2010 (Part I), as amended. Luxembourg was the first country to implement the UCITS directive in 1988 and today holds 34% of global UCITS assets. UCITS carry an EU passport allowing distribution across all Member States via simple notification, and are recognised in over 80 countries. From 1 January 2023, the PRIIPs KID replaces the UCITS KIID for EEA retail investors.",
     specs: [
       { label: "Investor Type", value: "All investors (retail + professional)", note: "No minimum investment threshold" },
-      { label: "Regulator", value: "CSSF prior authorisation", note: "Ongoing supervision" },
+      { label: "Legislation", value: "Fund Law 2010, Part I", note: "As amended" },
+      { label: "Regulator", value: "CSSF prior authorisation", note: "Ongoing supervision; ESMA oversight" },
       { label: "Time to Market", value: "3–6 months", note: "CSSF approval required" },
-      { label: "Assets", value: "Transferable securities only", note: "UCITS-eligible instruments" },
+      { label: "Eligible Assets", value: "Transferable securities only", note: "Art. 41 Fund Law; CSSF Circulars 08/339, 08/380" },
+      { label: "Risk Diversification", value: "Required — detailed limits", note: "Arts. 42–52 Fund Law" },
       { label: "Passporting", value: "Full EU Passport", note: "Simple notification procedure" },
-      { label: "Subscription Tax", value: "0.05% p.a. (0.01% for money market)", note: "On NAV" },
-      { label: "Leverage", value: "Strictly restricted", note: "Commitment/VaR approach" },
-      { label: "Typical Use", value: "Liquid funds, ETFs, cross-border retail", note: "" }
+      { label: "Subscription Tax", value: "0.05% p.a. on NAV", note: "0.01% for money market funds; exempt for ETFs from 1 Jan 2025; exempt for ELTIFs, MMFs, PEPP" },
+      { label: "Income Tax", value: "Exempt", note: "No corporate income tax" },
+      { label: "Withholding Tax", value: "None on distributions", note: "No Luxembourg withholding tax" },
+      { label: "Leverage", value: "Strictly restricted", note: "Commitment or VaR approach" },
+      { label: "AIFMD II", value: "Not applicable", note: "UCITS governed by UCITS Directive" },
+      { label: "Typical Use", value: "Liquid funds, ETFs, cross-border retail distribution", note: "" }
     ],
     alternatives: ["Part II UCI", "SIF"]
   },
@@ -346,16 +351,21 @@ const VEHICLES = {
     status: "regulated",
     badge: "badge-retail",
     badgeText: "All Investors",
-    summary: "The flexible regulated vehicle for funds that fall outside the UCITS eligible assets universe but wish to target retail investors. Less restrictive than UCITS on eligible assets and leverage, but subject to CSSF authorisation. Commonly used for fund of funds, hedge funds targeting retail, and mixed-asset strategies.",
+    summary: "The flexible regulated vehicle for funds targeting all investor types — including retail — that fall outside the UCITS eligible assets universe. Governed by the Law of 17 December 2010 (Part II), as amended, including the Law of 21 July 2023 which introduced new SICAV legal forms, non-NAV issue pricing for closed-ended Part II UCIs, and updated subscription tax exemptions. Risk-spreading requirements are now governed by CSSF Circular 25/901 (December 2025).",
     specs: [
       { label: "Investor Type", value: "All investors including retail", note: "No minimum threshold" },
-      { label: "Regulator", value: "CSSF prior authorisation", note: "Ongoing supervision" },
+      { label: "Legislation", value: "Fund Law 2010, Part II", note: "As amended by Law of 21 July 2023" },
+      { label: "Regulator", value: "CSSF prior authorisation", note: "Investment objective/strategy approved by CSSF" },
       { label: "Time to Market", value: "3–6 months", note: "CSSF approval required" },
-      { label: "Assets", value: "Unrestricted", note: "No asset restrictions" },
-      { label: "Passporting", value: "National rules apply", note: "No automatic EU passport" },
-      { label: "Subscription Tax", value: "0.05% p.a.", note: "On NAV" },
-      { label: "Leverage", value: "Flexible", note: "No hard UCITS constraints" },
-      { label: "Typical Use", value: "Retail hedge funds, fund of funds", note: "" }
+      { label: "Eligible Assets", value: "Unrestricted", note: "Subject to CSSF-approved investment strategy" },
+      { label: "Risk Diversification", value: "Required — CSSF Circular 25/901", note: "Max 25% per entity (retail); 50% (professional investors)" },
+      { label: "Passporting", value: "EU Passport via AIFM (if AIF)", note: "National rules apply if no AIFM" },
+      { label: "Subscription Tax", value: "0.05% p.a. on NAV", note: "Exempt for ELTIFs, qualifying MMFs, PEPP investors" },
+      { label: "Income Tax", value: "Exempt", note: "No corporate income tax" },
+      { label: "Withholding Tax", value: "None on distributions", note: "No Luxembourg withholding tax" },
+      { label: "Leverage", value: "Flexible", note: "No hard UCITS leverage constraints" },
+      { label: "AIFMD II", value: "Applicable if qualifies as AIF", note: "Law of 3 March 2026; enhanced reporting from April 2027" },
+      { label: "Typical Use", value: "Retail alternatives, fund of funds, mixed strategies", note: "" }
     ],
     alternatives: ["UCITS", "SIF"]
   },
@@ -365,16 +375,21 @@ const VEHICLES = {
     status: "regulated",
     badge: "badge-regulated",
     badgeText: "Regulated AIF",
-    summary: "The regulated workhorse for Luxembourg alternative investment funds targeting professional and well-informed investors. Subject to CSSF supervision and prior authorisation but offers considerable flexibility on eligible assets and investment strategies. Over 1,300 SIFs are established in Luxembourg.",
+    summary: "The regulated workhorse for Luxembourg alternative investment funds targeting professional and well-informed investors. Governed by the SIF Law of 13 February 2007, as amended. Requires CSSF prior authorisation and is subject to ongoing supervision. Risk-spreading requirements updated by CSSF Circular 25/901 (December 2025), replacing Circular 07/309. Auditor reporting now follows the SAQ regime under CSSF Circular 21/790.",
     specs: [
-      { label: "Investor Type", value: "Professional & well-informed investors", note: "Min. €100,000 investment" },
-      { label: "Regulator", value: "CSSF prior authorisation", note: "3–6 months to launch" },
-      { label: "Time to Market", value: "3–6 months", note: "Full CSSF approval process" },
-      { label: "Assets", value: "Unrestricted", note: "Risk diversification required" },
-      { label: "Passporting", value: "EU Passport via AIFM", note: "If managed by authorised AIFM" },
-      { label: "Subscription Tax", value: "0.01% p.a.", note: "On NAV" },
-      { label: "Leverage", value: "Flexible", note: "Risk diversification required" },
-      { label: "Typical Use", value: "Hedge funds, RE, PE, multi-asset alts", note: "" }
+      { label: "Investor Type", value: "Professional & well-informed investors", note: "Min. €100,000 investment (reduced from €125,000 by Law of 21 July 2023)" },
+      { label: "Legislation", value: "SIF Law of 13 February 2007", note: "As amended" },
+      { label: "Regulator", value: "CSSF prior authorisation", note: "Ongoing CSSF supervision" },
+      { label: "Time to Market", value: "1–3 months", note: "CSSF approval; simplified process vs UCITS" },
+      { label: "Eligible Assets", value: "Unrestricted", note: "Any asset class permitted" },
+      { label: "Risk Diversification", value: "Required — CSSF Circular 25/901", note: "Quantified limits introduced Dec 2025; grandfathering for existing funds" },
+      { label: "Passporting", value: "EU Passport via authorised AIFM", note: "AIFMD II applicable from April 2026" },
+      { label: "Subscription Tax", value: "0.01% p.a. on NAV", note: "Reduced rate for Taxonomy-aligned sustainable investments; exempt for ELTIFs, MMFs, PEPP" },
+      { label: "Income Tax", value: "Exempt", note: "No corporate income tax" },
+      { label: "Withholding Tax", value: "None on distributions", note: "No Luxembourg withholding tax" },
+      { label: "Leverage", value: "Flexible", note: "Risk diversification limits apply per Circular 25/901" },
+      { label: "AIFMD II", value: "Applicable", note: "Law of 3 March 2026; enhanced supervisory reporting from April 2027" },
+      { label: "Typical Use", value: "Hedge funds, real estate, private equity, multi-asset alts", note: "" }
     ],
     alternatives: ["RAIF", "SICAR", "Part II UCI"]
   },
@@ -384,16 +399,21 @@ const VEHICLES = {
     status: "regulated",
     badge: "badge-regulated",
     badgeText: "Regulated AIF",
-    summary: "Purpose-built for private equity and venture capital. The SICAR regime is designed around risk capital and does not impose diversification requirements, making it ideal for concentrated positions in unlisted companies. Over 350 SICARs represent more than €62bn AUM in Luxembourg.",
+    summary: "Purpose-built for private equity and venture capital. Governed by the SICAR Law of 15 June 2004, as amended. Restricted to risk capital investments with no diversification requirement. The definition of risk capital and assessment criteria are now codified in CSSF Circular 25/901 (December 2025), replacing Circular 06/241. SICARs authorised before publication of Circular 25/901 are grandfathered. AIFMD II applies from April 2026.",
     specs: [
-      { label: "Investor Type", value: "Professional & well-informed investors", note: "Min. €100,000 investment" },
-      { label: "Regulator", value: "CSSF prior authorisation", note: "Ongoing supervision" },
-      { label: "Time to Market", value: "3–6 months", note: "CSSF approval required" },
-      { label: "Assets", value: "Risk capital / private equity only", note: "No diversification requirement" },
-      { label: "Passporting", value: "EU Passport via AIFM", note: "If managed by authorised AIFM" },
+      { label: "Investor Type", value: "Professional & well-informed investors", note: "Min. €100,000 investment (reduced from €125,000 by Law of 21 July 2023)" },
+      { label: "Legislation", value: "SICAR Law of 15 June 2004", note: "As amended; CSSF Circular 25/901" },
+      { label: "Regulator", value: "CSSF prior authorisation", note: "Ongoing CSSF supervision" },
+      { label: "Time to Market", value: "1–3 months", note: "CSSF approval required" },
+      { label: "Eligible Assets", value: "Risk capital only", note: "High-risk investments for launch, development or listing; marginal use of derivatives permitted" },
+      { label: "Risk Diversification", value: "None required", note: "Concentrated positions in risk capital permitted" },
+      { label: "Passporting", value: "EU Passport via authorised AIFM", note: "AIFMD II applicable from April 2026" },
       { label: "Subscription Tax", value: "Exempt", note: "No subscription tax" },
-      { label: "Leverage", value: "No restrictions", note: "Investment in risk capital" },
-      { label: "Typical Use", value: "Private equity, VC, concentrated PE", note: "" }
+      { label: "Income Tax", value: "Partially exempt", note: "Exempt on income/gains from risk capital; remaining income taxed at 23.87% aggregate (Luxembourg City, 2025)" },
+      { label: "Withholding Tax", value: "None on distributions", note: "No Luxembourg withholding tax" },
+      { label: "Net Wealth Tax", value: "Minimum NWT only", note: "Simplified brackets from 2025: €535 / €1,605 / €4,815 based on balance sheet size" },
+      { label: "AIFMD II", value: "Applicable", note: "Law of 3 March 2026; enhanced supervisory reporting from April 2027" },
+      { label: "Typical Use", value: "Private equity, venture capital, concentrated risk capital", note: "" }
     ],
     alternatives: ["RAIF (SICAR-like)", "SLP", "SIF"]
   },
@@ -402,17 +422,22 @@ const VEHICLES = {
     fullname: "Reserved Alternative Investment Fund",
     status: "unregulated",
     badge: "badge-unregulated",
-    badgeText: "Unregulated (AIFM supervised)",
-    summary: "The fastest route to market for alternative funds in Luxembourg. The RAIF requires no CSSF authorisation at fund level — it is supervised indirectly via its mandatory AIFM. Launched in 2016, it has become the preferred vehicle for private equity, real estate, and hedge fund strategies requiring speed and flexibility. 1,533 RAIFs are now established in Luxembourg.",
+    badgeText: "Unregulated (AIFM-supervised)",
+    summary: "The fastest route to market for alternative funds in Luxembourg. No CSSF fund-level authorisation required — the RAIF is supervised indirectly via its mandatory authorised AIFM. Established by the RAIF Law of 23 July 2016, as amended. The Law of 21 July 2023 simplified RAIF formation formalities and introduced new subscription tax exemptions for ELTIFs, qualifying MMFs and PEPP-reserved funds. AIFMD II (Law of 3 March 2026) applies to the AIFM.",
     specs: [
-      { label: "Investor Type", value: "Professional & well-informed investors", note: "Min. €100,000 investment" },
-      { label: "Regulator", value: "No direct CSSF oversight", note: "AIFM supervised; notary setup" },
-      { label: "Time to Market", value: "2–4 weeks", note: "No CSSF approval needed" },
-      { label: "Assets", value: "Unrestricted (SIF or SICAR regime)", note: "Elect at formation" },
-      { label: "Passporting", value: "EU Passport via AIFM", note: "Requires authorised AIFM" },
-      { label: "Subscription Tax", value: "0.01% p.a. (SIF-like) / Exempt (SICAR-like)", note: "Regime elected at setup" },
-      { label: "Leverage", value: "Flexible", note: "Dependent on elected regime" },
-      { label: "Typical Use", value: "PE, real estate, hedge, infrastructure", note: "" }
+      { label: "Investor Type", value: "Professional & well-informed investors", note: "Min. €100,000 investment (reduced from €125,000 by Law of 21 July 2023)" },
+      { label: "Legislation", value: "RAIF Law of 23 July 2016", note: "As amended by Law of 21 July 2023" },
+      { label: "Regulator", value: "No direct CSSF fund oversight", note: "Supervised via mandatory authorised AIFM" },
+      { label: "Time to Market", value: "2–4 weeks", note: "Simplified formalities since Law of 21 July 2023; notary setup, no CSSF approval" },
+      { label: "Eligible Assets", value: "Unrestricted (SIF-like or SICAR-like regime)", note: "Regime elected at formation" },
+      { label: "Risk Diversification", value: "SIF-like: applies; SICAR-like: none", note: "Circular 25/901 applies to SIF-like RAIFs" },
+      { label: "Passporting", value: "EU Passport via authorised AIFM", note: "AIFMD II applicable from April 2026" },
+      { label: "Subscription Tax", value: "SIF-like: 0.01% p.a. on NAV", note: "SICAR-like: exempt; also exempt for ELTIFs, qualifying MMFs, PEPP investors (since July 2023)" },
+      { label: "Income Tax", value: "SIF-like: exempt; SICAR-like: partially exempt", note: "SICAR-like: 23.87% aggregate on non-exempt income (Luxembourg City, 2025)" },
+      { label: "Withholding Tax", value: "None on distributions", note: "No Luxembourg withholding tax" },
+      { label: "Net Wealth Tax", value: "SICAR-like only — minimum NWT", note: "Simplified brackets from 2025: €535 / €1,605 / €4,815" },
+      { label: "AIFMD II", value: "Applicable to AIFM", note: "Law of 3 March 2026; enhanced reporting from April 2027" },
+      { label: "Typical Use", value: "PE, real estate, hedge, infrastructure, ELTIFs", note: "" }
     ],
     alternatives: ["SIF", "SLP", "SICAR"]
   },
@@ -422,16 +447,21 @@ const VEHICLES = {
     status: "unregulated",
     badge: "badge-unregulated",
     badgeText: "Unregulated",
-    summary: "Luxembourg's answer to Anglo-Saxon limited partnership structures. The SLP has no legal personality, offers maximum contractual freedom, and imposes no investment or diversification constraints. Widely used in private equity as a co-investment vehicle or as a fund structure itself. Over 5,600 SCSs/SCSps are in existence in Luxembourg.",
+    summary: "Luxembourg's answer to Anglo-Saxon limited partnership structures, introduced in 2013. The SCSp has no separate legal personality and offers maximum contractual freedom with no investment or diversification constraints. Fiscally transparent for income and net wealth tax purposes. Widely used in private equity as a fund vehicle, co-investment structure or carried interest vehicle. Over 5,600 SCSs/SCSps exist in Luxembourg. AIFMD II applies where the SCSp qualifies as an AIF managed by an authorised AIFM.",
     specs: [
       { label: "Investor Type", value: "Professional investors", note: "Sophisticated / institutional" },
-      { label: "Regulator", value: "No CSSF supervision", note: "Pure contractual vehicle" },
-      { label: "Time to Market", value: "Days to weeks", note: "Notarised partnership agreement" },
-      { label: "Assets", value: "Unrestricted", note: "Complete investment freedom" },
-      { label: "Passporting", value: "EU Passport via AIFM (if appointed)", note: "AIFM not mandatory" },
-      { label: "Subscription Tax", value: "Exempt", note: "Tax transparent" },
-      { label: "Leverage", value: "No restrictions", note: "Contractually defined" },
-      { label: "Typical Use", value: "PE co-invest, carried interest, deal-by-deal", note: "" }
+      { label: "Legislation", value: "Luxembourg Partnership Law (2013)", note: "No specific fund legislation" },
+      { label: "Regulator", value: "No CSSF supervision", note: "Pure contractual vehicle; AIFM required if AIF above threshold" },
+      { label: "Time to Market", value: "Days to weeks", note: "Notarised limited partnership agreement" },
+      { label: "Eligible Assets", value: "Unrestricted", note: "Contractually defined" },
+      { label: "Risk Diversification", value: "None required", note: "Complete investment freedom" },
+      { label: "Passporting", value: "EU Passport via AIFM (if appointed)", note: "AIFM not mandatory below AIFMD threshold" },
+      { label: "Subscription Tax", value: "Exempt", note: "No subscription tax" },
+      { label: "Income Tax", value: "Fiscally transparent", note: "Not subject to Luxembourg corporate income tax" },
+      { label: "Municipal Business Tax", value: "Exempt if AIF", note: "Partnerships qualifying as AIFs under AIFMD not subject to MBT" },
+      { label: "Withholding Tax", value: "None on distributions", note: "No Luxembourg withholding tax" },
+      { label: "AIFMD II", value: "Applicable if managed by authorised AIFM", note: "Law of 3 March 2026; enhanced reporting from April 2027" },
+      { label: "Typical Use", value: "PE funds, co-investment, carried interest, deal-by-deal", note: "" }
     ],
     alternatives: ["RAIF", "SICAR"]
   },
@@ -441,16 +471,21 @@ const VEHICLES = {
     status: "unregulated",
     badge: "badge-unregulated",
     badgeText: "Holding / Unregulated",
-    summary: "A fully-taxable Luxembourg holding company used as a financial holding vehicle. Not a fund per se, but widely used in fund structures as a top-holding company, intermediate SPV, or for wealth management structuring. Benefits from Luxembourg's extensive tax treaty network (80+ treaties) and EU parent-subsidiary directive.",
+    summary: "A fully-taxable Luxembourg holding company used widely in fund and wealth structuring. Not a fund vehicle, but commonly used as a top-holding company, intermediate SPV, or group structuring entity. Benefits from Luxembourg's network of 80+ double tax treaties and the EU Parent-Subsidiary Directive. Corporate income tax rate reduced to 16% (from 17%) as of 1 January 2025; aggregate rate 23.87% for Luxembourg City.",
     specs: [
       { label: "Investor Type", value: "Natural & legal persons", note: "No restriction" },
-      { label: "Regulator", value: "No CSSF supervision", note: "Standard company law" },
+      { label: "Legislation", value: "Luxembourg company law", note: "No specific fund legislation" },
+      { label: "Regulator", value: "No CSSF supervision", note: "Standard Luxembourg company law" },
       { label: "Time to Market", value: "1–2 weeks", note: "Notarised incorporation" },
-      { label: "Assets", value: "Holding of investment assets", note: "Participations in companies" },
+      { label: "Eligible Assets", value: "Holding of participations / investment assets", note: "No asset restrictions" },
+      { label: "Risk Diversification", value: "None required", note: "" },
       { label: "Passporting", value: "EU Freedom to Provide Services", note: "Not a fund passport" },
-      { label: "Subscription Tax", value: "Not applicable", note: "Subject to CIT / MBT" },
-      { label: "Leverage", value: "No restrictions", note: "Thin cap rules apply" },
-      { label: "Typical Use", value: "Holding companies, SPVs, wealth structuring", note: "" }
+      { label: "Subscription Tax", value: "Not applicable", note: "No subscription tax" },
+      { label: "Income Tax", value: "Subject to CIT + solidarity surtax + MBT", note: "Aggregate rate 23.87% (Luxembourg City, 2025); CIT reduced to 16% from 1 Jan 2025" },
+      { label: "Participation Exemption", value: "Available", note: "On qualifying dividends and capital gains under EU Parent-Subsidiary Directive" },
+      { label: "Double Tax Treaties", value: "Full access", note: "80+ Luxembourg DTTs available to corporate SOPARFIs" },
+      { label: "Net Wealth Tax", value: "Subject to NWT", note: "Simplified minimum NWT brackets from 2025" },
+      { label: "Typical Use", value: "Holding companies, intermediate SPVs, group structuring", note: "" }
     ],
     alternatives: ["SLP", "SPF"]
   },
@@ -460,16 +495,21 @@ const VEHICLES = {
     status: "unregulated",
     badge: "badge-unregulated",
     badgeText: "Wealth Management",
-    summary: "A dedicated vehicle for private wealth management by high-net-worth individuals and family offices. The SPF is restricted to passive wealth management — it cannot conduct commercial activities or manage third-party assets. It benefits from a favourable tax regime with exemption from income and wealth taxes.",
+    summary: "A dedicated vehicle for private wealth management by high-net-worth individuals, family offices and intermediaries acting on their behalf. Restricted to passive wealth management — no commercial activities, no management of third-party assets. Benefits from exemption from income tax, net wealth tax and VAT on management services. Subject to an annual subscription tax of 0.25% on paid-in capital and share premium.",
     specs: [
-      { label: "Investor Type", value: "HNWI / Family offices only", note: "Private individuals & intermediaries" },
-      { label: "Regulator", value: "No CSSF supervision", note: "Tax authority oversight" },
-      { label: "Time to Market", value: "1–2 weeks", note: "Standard incorporation" },
-      { label: "Assets", value: "Portfolio of investment assets", note: "Passive holding only" },
+      { label: "Investor Type", value: "HNWI / family offices only", note: "Private individuals, certain intermediaries holding on their behalf" },
+      { label: "Legislation", value: "SPF Law of 11 May 2007", note: "As amended" },
+      { label: "Regulator", value: "No CSSF supervision", note: "Supervised by Luxembourg tax authorities" },
+      { label: "Time to Market", value: "1–2 weeks", note: "Standard notarised incorporation" },
+      { label: "Eligible Assets", value: "Portfolio of investment assets — passive only", note: "No commercial activity permitted; no management of third-party assets" },
+      { label: "Risk Diversification", value: "None required", note: "" },
       { label: "Passporting", value: "Not applicable", note: "Wealth vehicle, not a fund" },
-      { label: "Subscription Tax", value: "0.25% p.a. on paid-in capital", note: "Subject to annual subscription tax" },
-      { label: "Leverage", value: "Restricted", note: "Passive management only" },
-      { label: "Typical Use", value: "Family wealth, private portfolio, succession", note: "" }
+      { label: "Subscription Tax", value: "0.25% p.a. on paid-in capital and share premium", note: "Min. €100; max. €125,000 per year" },
+      { label: "Income Tax", value: "Exempt", note: "No corporate income tax or municipal business tax" },
+      { label: "Net Wealth Tax", value: "Exempt", note: "No Luxembourg net wealth tax" },
+      { label: "Withholding Tax", value: "None on distributions", note: "No Luxembourg withholding tax" },
+      { label: "Double Tax Treaties", value: "No access", note: "SPF cannot benefit from Luxembourg DTTs" },
+      { label: "Typical Use", value: "Family wealth management, private portfolio, succession planning", note: "" }
     ],
     alternatives: ["SOPARFI", "Life insurance contract"]
   }
